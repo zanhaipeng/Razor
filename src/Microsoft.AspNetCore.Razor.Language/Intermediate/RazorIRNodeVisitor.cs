@@ -34,6 +34,11 @@ namespace Microsoft.AspNetCore.Razor.Language.Intermediate
             VisitDefault(node);
         }
 
+        public virtual void VisitMalformedDirective(MalformedDirectiveIRNode node)
+        {
+            VisitDefault(node);
+        }
+
         public virtual void VisitExtension(ExtensionIRNode node)
         {
             VisitDefault(node);

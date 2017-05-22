@@ -134,12 +134,19 @@ namespace Microsoft.AspNetCore.Razor.Language
 
             public override void VisitAddTagHelperSpan(AddTagHelperChunkGenerator chunkGenerator, Span span)
             {
-                _builder.Push(new DirectiveIRNode()
+                var directiveNode = new DirectiveIRNode()
                 {
                     Name = CSharpCodeParser.AddTagHelperDirectiveDescriptor.Directive,
                     Descriptor = CSharpCodeParser.AddTagHelperDirectiveDescriptor,
                     Source = BuildSourceSpanFromNode(span),
-                });
+                };
+
+                for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
+                {
+                    directiveNode.Diagnostics.Add(chunkGenerator.Diagnostics[i]);
+                }
+
+                _builder.Push(directiveNode);
 
                 _builder.Add(new DirectiveTokenIRNode()
                 {
@@ -153,12 +160,19 @@ namespace Microsoft.AspNetCore.Razor.Language
 
             public override void VisitRemoveTagHelperSpan(RemoveTagHelperChunkGenerator chunkGenerator, Span span)
             {
-                _builder.Push(new DirectiveIRNode()
+                var directiveNode = new DirectiveIRNode()
                 {
                     Name = CSharpCodeParser.RemoveTagHelperDirectiveDescriptor.Directive,
                     Descriptor = CSharpCodeParser.RemoveTagHelperDirectiveDescriptor,
                     Source = BuildSourceSpanFromNode(span),
-                });
+                };
+
+                for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
+                {
+                    directiveNode.Diagnostics.Add(chunkGenerator.Diagnostics[i]);
+                }
+
+                _builder.Push(directiveNode);
 
                 _builder.Add(new DirectiveTokenIRNode()
                 {
@@ -172,12 +186,19 @@ namespace Microsoft.AspNetCore.Razor.Language
 
             public override void VisitTagHelperPrefixDirectiveSpan(TagHelperPrefixDirectiveChunkGenerator chunkGenerator, Span span)
             {
-                _builder.Push(new DirectiveIRNode()
+                var directiveNode = new DirectiveIRNode()
                 {
                     Name = CSharpCodeParser.TagHelperPrefixDirectiveDescriptor.Directive,
                     Descriptor = CSharpCodeParser.TagHelperPrefixDirectiveDescriptor,
                     Source = BuildSourceSpanFromNode(span),
-                });
+                };
+
+                for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
+                {
+                    directiveNode.Diagnostics.Add(chunkGenerator.Diagnostics[i]);
+                }
+
+                _builder.Push(directiveNode);
 
                 _builder.Add(new DirectiveTokenIRNode()
                 {
@@ -238,12 +259,19 @@ namespace Microsoft.AspNetCore.Razor.Language
                 {
                     _insideLineDirective = true;
 
-                    _builder.Push(new DirectiveIRNode()
+                    var directiveNode = new DirectiveIRNode()
                     {
                         Name = chunkGenerator.Descriptor.Directive,
                         Descriptor = chunkGenerator.Descriptor,
                         Source = BuildSourceSpanFromNode(block),
-                    });
+                    };
+
+                    for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
+                    {
+                        directiveNode.Diagnostics.Add(chunkGenerator.Diagnostics[i]);
+                    }
+
+                    _builder.Push(directiveNode);
 
                     base.VisitDirectiveBlock(chunkGenerator, block);
 
@@ -277,14 +305,19 @@ namespace Microsoft.AspNetCore.Razor.Language
 
             public override void VisitDirectiveBlock(DirectiveChunkGenerator chunkGenerator, Block block)
             {
-                _builder.Push(new DirectiveIRNode()
+                var directiveNode = new DirectiveIRNode()
                 {
                     Name = chunkGenerator.Descriptor.Directive,
                     Descriptor = chunkGenerator.Descriptor,
                     Source = BuildSourceSpanFromNode(block),
-                });
+                };
 
-                VisitDefault(block);
+                for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
+                {
+                    directiveNode.Diagnostics.Add(chunkGenerator.Diagnostics[i]);
+                }
+
+                _builder.Push(directiveNode);
 
                 _builder.Pop();
             }

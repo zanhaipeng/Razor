@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language.Legacy
@@ -9,6 +10,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
     internal class DirectiveChunkGenerator : ParentChunkGenerator
     {
         private static readonly Type Type = typeof(DirectiveChunkGenerator);
+        private List<RazorDiagnostic> _diagnostics;
 
         public DirectiveChunkGenerator(DirectiveDescriptor descriptor)
         {
@@ -16,6 +18,19 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
         }
 
         public DirectiveDescriptor Descriptor { get; }
+
+        public List<RazorDiagnostic> Diagnostics
+        {
+            get
+            {
+                if (_diagnostics == null)
+                {
+                    _diagnostics = new List<RazorDiagnostic>();
+                }
+
+                return _diagnostics;
+            }
+        }
 
         public override void Accept(ParserVisitor visitor, Block block)
         {

@@ -2,18 +2,22 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language.Legacy
 {
     internal class TagHelperPrefixDirectiveChunkGenerator : SpanChunkGenerator
     {
-        public TagHelperPrefixDirectiveChunkGenerator(string prefix)
+        public TagHelperPrefixDirectiveChunkGenerator(string prefix, IReadOnlyList<RazorDiagnostic> diagnostics)
         {
             Prefix = prefix;
+            Diagnostics = diagnostics;
         }
 
         public string Prefix { get; }
+
+        public IReadOnlyList<RazorDiagnostic> Diagnostics { get; }
 
         public override void Accept(ParserVisitor visitor, Span span)
         {
