@@ -3,13 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language.Legacy
 {
     internal class RemoveTagHelperChunkGenerator : SpanChunkGenerator
     {
-        public RemoveTagHelperChunkGenerator(string lookupText, IReadOnlyList<RazorDiagnostic> diagnostics)
+        public RemoveTagHelperChunkGenerator(string lookupText, List<RazorDiagnostic> diagnostics)
         {
             LookupText = lookupText;
             Diagnostics = diagnostics;
@@ -17,7 +18,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
 
         public string LookupText { get; }
 
-        public IReadOnlyList<RazorDiagnostic> Diagnostics { get; }
+        public List<RazorDiagnostic> Diagnostics { get; }
 
         public override void Accept(ParserVisitor visitor, Span span)
         {
@@ -29,6 +30,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
         {
             var other = obj as RemoveTagHelperChunkGenerator;
             return base.Equals(other) &&
+                Enumerable.SequenceEqual(Diagnostics, other.Diagnostics) &&
                 string.Equals(LookupText, other.LookupText, StringComparison.Ordinal);
         }
 

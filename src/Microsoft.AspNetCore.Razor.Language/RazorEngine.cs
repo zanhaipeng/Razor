@@ -69,7 +69,6 @@ namespace Microsoft.AspNetCore.Razor.Language
             builder.Features.Add(new HtmlNodeOptimizationPass());
 
             // IR Passes
-            builder.Features.Add(new MalformedDirectiveIRPass());
             builder.Features.Add(new DefaultDocumentClassifierPass());
             builder.Features.Add(new DirectiveRemovalIROptimizationPass());
 

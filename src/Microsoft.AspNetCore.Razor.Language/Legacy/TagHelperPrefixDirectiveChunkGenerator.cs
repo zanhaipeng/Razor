@@ -3,13 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language.Legacy
 {
     internal class TagHelperPrefixDirectiveChunkGenerator : SpanChunkGenerator
     {
-        public TagHelperPrefixDirectiveChunkGenerator(string prefix, IReadOnlyList<RazorDiagnostic> diagnostics)
+        public TagHelperPrefixDirectiveChunkGenerator(string prefix, List<RazorDiagnostic> diagnostics)
         {
             Prefix = prefix;
             Diagnostics = diagnostics;
@@ -17,7 +18,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
 
         public string Prefix { get; }
 
-        public IReadOnlyList<RazorDiagnostic> Diagnostics { get; }
+        public List<RazorDiagnostic> Diagnostics { get; }
 
         public override void Accept(ParserVisitor visitor, Span span)
         {
@@ -29,6 +30,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
         {
             var other = obj as TagHelperPrefixDirectiveChunkGenerator;
             return base.Equals(other) &&
+                Enumerable.SequenceEqual(Diagnostics, other.Diagnostics) &&
                 string.Equals(Prefix, other.Prefix, StringComparison.Ordinal);
         }
 

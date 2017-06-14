@@ -91,11 +91,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
         {
             foreach (var directive in directives)
             {
-                _directiveParsers.Add(directive, () =>
-                {
-                    EnsureDirectiveIsAtStartOfLine();
-                    handler();
-                });
+                _directiveParsers.Add(directive, handler);
                 Keywords.Add(directive);
 
                 // These C# keywords are reserved for use in directives. It's an error to use them outside of
@@ -1576,6 +1572,12 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
 
         private void HandleDirective(DirectiveDescriptor descriptor)
         {
+            var directiveErrorSink = new ErrorSink();
+            var savedErrorSink = Context.ErrorSink;
+            Context.ErrorSink = directiveErrorSink;
+
+            EnsureDirectiveIsAtStartOfLine();
+
             Context.Builder.CurrentBlock.Type = BlockKindInternal.Directive;
             var directiveChunkGenerator = new DirectiveChunkGenerator(descriptor);
             Context.Builder.CurrentBlock.ChunkGenerator = directiveChunkGenerator;
@@ -1584,14 +1586,13 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
             AcceptAndMoveNext();
             Output(SpanKindInternal.MetaCode, AcceptedCharactersInternal.None);
 
-            var directiveErrorSink = new ErrorSink();
-            var savedErrorSink = Context.ErrorSink;
-            Context.ErrorSink = directiveErrorSink;
             try
             {
                 for (var i = 0; i < descriptor.Tokens.Count; i++)
                 {
-                    if (!At(CSharpSymbolType.WhiteSpace))
+                    if (!At(CSharpSymbolType.WhiteSpace) &&
+                        !At(CSharpSymbolType.NewLine) && 
+                        !EndOfFile)
                     {
                         Context.ErrorSink.OnError(
                             CurrentStart,
@@ -1892,9 +1893,16 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
             Output(SpanKindInternal.Code, AcceptedCharactersInternal.AnyExceptNewline);
         }
 
-        private void TagHelperDirective(string keyword, Func<string, IReadOnlyList<RazorDiagnostic>, ISpanChunkGenerator> chunkGeneratorFactory)
+        private void TagHelperDirective(string keyword, Func<string, List<RazorDiagnostic>, ISpanChunkGenerator> chunkGeneratorFactory)
         {
             AssertDirective(keyword);
+
+            var savedErrorSink = Context.ErrorSink;
+            var directiveErrorSink = new ErrorSink();
+            Context.ErrorSink = directiveErrorSink;
+
+            EnsureDirectiveIsAtStartOfLine();
+
             var keywordStartLocation = CurrentStart;
 
             // Accept the directive name
@@ -1905,56 +1913,66 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
 
             var keywordLength = Span.End.AbsoluteIndex - Span.Start.AbsoluteIndex;
 
-            var foundWhitespace = At(CSharpSymbolType.WhiteSpace);
-            AcceptWhile(CSharpSymbolType.WhiteSpace);
 
-            // If we found whitespace then any content placed within the whitespace MAY cause a destructive change
-            // to the document.  We can't accept it.
-            Output(SpanKindInternal.MetaCode, foundWhitespace ? AcceptedCharactersInternal.None : AcceptedCharactersInternal.AnyExceptNewline);
-
-            ISpanChunkGenerator chunkGenerator;
-            if (EndOfFile || At(CSharpSymbolType.NewLine))
+            string directiveValue = null;
+            try
             {
-                var directiveErrors = new List<RazorDiagnostic>()
-                {
-                    RazorDiagnostic.Create(
-                        new RazorError(
-                            LegacyResources.FormatParseError_DirectiveMustHaveValue(keyword),
-                            keywordStartLocation,
-                            keywordLength))
-                };
+                var foundWhitespace = At(CSharpSymbolType.WhiteSpace);
+                AcceptWhile(CSharpSymbolType.WhiteSpace);
 
-                chunkGenerator = chunkGeneratorFactory(string.Empty, directiveErrors);
+                // If we found whitespace then any content placed within the whitespace MAY cause a destructive change
+                // to the document.  We can't accept it.
+                Output(SpanKindInternal.MetaCode, foundWhitespace ? AcceptedCharactersInternal.None : AcceptedCharactersInternal.AnyExceptNewline);
+
+                if (EndOfFile || At(CSharpSymbolType.NewLine))
+                {
+                    Context.ErrorSink.OnError(
+                        keywordStartLocation,
+                        LegacyResources.FormatParseError_DirectiveMustHaveValue(keyword),
+                        keywordLength);
+
+                    directiveValue = string.Empty;
+                }
+                else
+                {
+                    // Need to grab the current location before we accept until the end of the line.
+                    var startLocation = CurrentStart;
+
+                    // Parse to the end of the line. Essentially accepts anything until end of line, comments, invalid code
+                    // etc.
+                    AcceptUntil(CSharpSymbolType.NewLine);
+
+                    // Pull out the value and remove whitespaces and optional quotes
+                    var rawValue = string.Concat(Span.Symbols.Select(s => s.Content)).Trim();
+
+                    var startsWithQuote = rawValue.StartsWith("\"", StringComparison.Ordinal);
+                    var endsWithQuote = rawValue.EndsWith("\"", StringComparison.Ordinal);
+                    if (startsWithQuote != endsWithQuote)
+                    {
+                        Context.ErrorSink.OnError(
+                            startLocation,
+                            LegacyResources.FormatParseError_IncompleteQuotesAroundDirective(keyword),
+                            rawValue.Length);
+                    }
+
+                    directiveValue = rawValue;
+                }
             }
-            else
+            finally
             {
-                // Need to grab the current location before we accept until the end of the line.
-                var startLocation = CurrentStart;
-
-                // Parse to the end of the line. Essentially accepts anything until end of line, comments, invalid code
-                // etc.
-                AcceptUntil(CSharpSymbolType.NewLine);
-
-                // Pull out the value and remove whitespaces and optional quotes
-                var rawValue = string.Concat(Span.Symbols.Select(s => s.Content)).Trim();
-
-                var startsWithQuote = rawValue.StartsWith("\"", StringComparison.Ordinal);
-                var endsWithQuote = rawValue.EndsWith("\"", StringComparison.Ordinal);
-                var directiveErrors = new List<RazorDiagnostic>();
-                if (startsWithQuote != endsWithQuote)
+                List<RazorDiagnostic> directiveErrors;
+                if (directiveErrorSink.Errors.Count > 0)
                 {
-                    directiveErrors.Add(
-                        RazorDiagnostic.Create(
-                            new RazorError(
-                                LegacyResources.FormatParseError_IncompleteQuotesAroundDirective(keyword),
-                                startLocation,
-                                rawValue.Length)));
+                    directiveErrors = directiveErrorSink.Errors.Select(RazorDiagnostic.Create).ToList();
+                }
+                else
+                {
+                    directiveErrors = new List<RazorDiagnostic>();
                 }
 
-                chunkGenerator = chunkGeneratorFactory(rawValue, directiveErrors);
+                Span.ChunkGenerator = chunkGeneratorFactory(directiveValue, directiveErrors);
+                Context.ErrorSink = savedErrorSink;
             }
-
-            Span.ChunkGenerator = chunkGenerator;
 
             // Output the span and finish the block
             CompleteBlock();

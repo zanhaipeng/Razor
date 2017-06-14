@@ -134,12 +134,25 @@ namespace Microsoft.AspNetCore.Razor.Language
 
             public override void VisitAddTagHelperSpan(AddTagHelperChunkGenerator chunkGenerator, Span span)
             {
-                var directiveNode = new DirectiveIRNode()
+                RazorIRNode directiveNode;
+                if (IsMalformed(chunkGenerator.Diagnostics))
                 {
-                    Name = CSharpCodeParser.AddTagHelperDirectiveDescriptor.Directive,
-                    Descriptor = CSharpCodeParser.AddTagHelperDirectiveDescriptor,
-                    Source = BuildSourceSpanFromNode(span),
-                };
+                    directiveNode = new MalformedDirectiveIRNode()
+                    {
+                        Name = CSharpCodeParser.AddTagHelperDirectiveDescriptor.Directive,
+                        Descriptor = CSharpCodeParser.AddTagHelperDirectiveDescriptor,
+                        Source = BuildSourceSpanFromNode(span),
+                    };
+                }
+                else
+                {
+                    directiveNode = new DirectiveIRNode()
+                    {
+                        Name = CSharpCodeParser.AddTagHelperDirectiveDescriptor.Directive,
+                        Descriptor = CSharpCodeParser.AddTagHelperDirectiveDescriptor,
+                        Source = BuildSourceSpanFromNode(span),
+                    };
+                }
 
                 for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
                 {
@@ -160,12 +173,25 @@ namespace Microsoft.AspNetCore.Razor.Language
 
             public override void VisitRemoveTagHelperSpan(RemoveTagHelperChunkGenerator chunkGenerator, Span span)
             {
-                var directiveNode = new DirectiveIRNode()
+                RazorIRNode directiveNode;
+                if (IsMalformed(chunkGenerator.Diagnostics))
                 {
-                    Name = CSharpCodeParser.RemoveTagHelperDirectiveDescriptor.Directive,
-                    Descriptor = CSharpCodeParser.RemoveTagHelperDirectiveDescriptor,
-                    Source = BuildSourceSpanFromNode(span),
-                };
+                    directiveNode = new MalformedDirectiveIRNode()
+                    {
+                        Name = CSharpCodeParser.RemoveTagHelperDirectiveDescriptor.Directive,
+                        Descriptor = CSharpCodeParser.RemoveTagHelperDirectiveDescriptor,
+                        Source = BuildSourceSpanFromNode(span),
+                    };
+                }
+                else
+                {
+                    directiveNode = new DirectiveIRNode()
+                    {
+                        Name = CSharpCodeParser.RemoveTagHelperDirectiveDescriptor.Directive,
+                        Descriptor = CSharpCodeParser.RemoveTagHelperDirectiveDescriptor,
+                        Source = BuildSourceSpanFromNode(span),
+                    };
+                }
 
                 for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
                 {
@@ -186,12 +212,25 @@ namespace Microsoft.AspNetCore.Razor.Language
 
             public override void VisitTagHelperPrefixDirectiveSpan(TagHelperPrefixDirectiveChunkGenerator chunkGenerator, Span span)
             {
-                var directiveNode = new DirectiveIRNode()
+                RazorIRNode directiveNode;
+                if (IsMalformed(chunkGenerator.Diagnostics))
                 {
-                    Name = CSharpCodeParser.TagHelperPrefixDirectiveDescriptor.Directive,
-                    Descriptor = CSharpCodeParser.TagHelperPrefixDirectiveDescriptor,
-                    Source = BuildSourceSpanFromNode(span),
-                };
+                    directiveNode = new MalformedDirectiveIRNode()
+                    {
+                        Name = CSharpCodeParser.TagHelperPrefixDirectiveDescriptor.Directive,
+                        Descriptor = CSharpCodeParser.TagHelperPrefixDirectiveDescriptor,
+                        Source = BuildSourceSpanFromNode(span),
+                    };
+                }
+                else
+                {
+                    directiveNode = new DirectiveIRNode()
+                    {
+                        Name = CSharpCodeParser.TagHelperPrefixDirectiveDescriptor.Directive,
+                        Descriptor = CSharpCodeParser.TagHelperPrefixDirectiveDescriptor,
+                        Source = BuildSourceSpanFromNode(span),
+                    };
+                }
 
                 for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
                 {
@@ -259,12 +298,25 @@ namespace Microsoft.AspNetCore.Razor.Language
                 {
                     _insideLineDirective = true;
 
-                    var directiveNode = new DirectiveIRNode()
+                    RazorIRNode directiveNode;
+                    if (IsMalformed(chunkGenerator.Diagnostics))
                     {
-                        Name = chunkGenerator.Descriptor.Directive,
-                        Descriptor = chunkGenerator.Descriptor,
-                        Source = BuildSourceSpanFromNode(block),
-                    };
+                        directiveNode = new MalformedDirectiveIRNode()
+                        {
+                            Name = chunkGenerator.Descriptor.Directive,
+                            Descriptor = chunkGenerator.Descriptor,
+                            Source = BuildSourceSpanFromNode(block),
+                        };
+                    }
+                    else
+                    {
+                        directiveNode = new DirectiveIRNode()
+                        {
+                            Name = chunkGenerator.Descriptor.Directive,
+                            Descriptor = chunkGenerator.Descriptor,
+                            Source = BuildSourceSpanFromNode(block),
+                        };
+                    }
 
                     for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
                     {
@@ -305,12 +357,25 @@ namespace Microsoft.AspNetCore.Razor.Language
 
             public override void VisitDirectiveBlock(DirectiveChunkGenerator chunkGenerator, Block block)
             {
-                var directiveNode = new DirectiveIRNode()
+                RazorIRNode directiveNode;
+                if (IsMalformed(chunkGenerator.Diagnostics))
                 {
-                    Name = chunkGenerator.Descriptor.Directive,
-                    Descriptor = chunkGenerator.Descriptor,
-                    Source = BuildSourceSpanFromNode(block),
-                };
+                    directiveNode = new MalformedDirectiveIRNode()
+                    {
+                        Name = chunkGenerator.Descriptor.Directive,
+                        Descriptor = chunkGenerator.Descriptor,
+                        Source = BuildSourceSpanFromNode(block),
+                    };
+                }
+                else
+                {
+                    directiveNode = new DirectiveIRNode()
+                    {
+                        Name = chunkGenerator.Descriptor.Directive,
+                        Descriptor = chunkGenerator.Descriptor,
+                        Source = BuildSourceSpanFromNode(block),
+                    };
+                }
 
                 for (var i = 0; i < chunkGenerator.Diagnostics.Count; i++)
                 {
@@ -318,6 +383,8 @@ namespace Microsoft.AspNetCore.Razor.Language
                 }
 
                 _builder.Push(directiveNode);
+
+                VisitDefault(block);
 
                 _builder.Pop();
             }
@@ -711,5 +778,8 @@ namespace Microsoft.AspNetCore.Razor.Language
                 }
             }
         }
+
+        private static bool IsMalformed(List<RazorDiagnostic> diagnostics)
+            => diagnostics.Count > 0 && diagnostics.Any(diagnostic => diagnostic.Severity == RazorDiagnosticSeverity.Error);
     }
 }

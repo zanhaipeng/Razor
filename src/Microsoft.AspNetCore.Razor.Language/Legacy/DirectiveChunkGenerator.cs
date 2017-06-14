@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language.Legacy
@@ -41,6 +43,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
         {
             var other = obj as DirectiveChunkGenerator;
             return base.Equals(other) &&
+                Enumerable.SequenceEqual(Diagnostics, other.Diagnostics) &&
                 DirectiveDescriptorComparer.Default.Equals(Descriptor, other.Descriptor);
         }
 
@@ -51,6 +54,25 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy
             combiner.Add(Type);
 
             return combiner.CombinedHash;
+        }
+
+        public override string ToString()
+        {
+            // This is used primarily at test time to show an identifiable representation of the chunk generator.
+
+            var toStringBuilder = new StringBuilder("Directive {");
+            toStringBuilder.Append(Descriptor.Directive);
+            toStringBuilder.Append("}");
+            
+            if (Diagnostics.Count > 0)
+            {
+                toStringBuilder.Append(" [");
+                var ids = string.Join(", ", Diagnostics.Select(diagnostic => diagnostic.Id));
+                toStringBuilder.Append(ids);
+                toStringBuilder.Append("]");
+            }
+
+            return toStringBuilder.ToString();
         }
     }
 }
