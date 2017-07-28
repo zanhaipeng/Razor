@@ -3,17 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
-using Microsoft.VisualStudio.Text;
 using Span = Microsoft.AspNetCore.Razor.Language.Legacy.Span;
-using ITextBuffer = Microsoft.AspNetCore.Razor.Language.Legacy.ITextBuffer;
 
-namespace Microsoft.VisualStudio.LanguageServices.Razor
+namespace Microsoft.CodeAnalysis.Razor
 {
-    [Export(typeof(RazorSyntaxFactsService))]
     internal class DefaultRazorSyntaxFactsService : RazorSyntaxFactsService
     {
         public override IReadOnlyList<ClassifiedSpan> GetClassifiedSpans(RazorSyntaxTree syntaxTree)
@@ -139,21 +135,21 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
             return results;
         }
 
-        public override int? GetDesiredIndentation(RazorSyntaxTree syntaxTree, ITextSnapshot syntaxTreeSnapshot, ITextSnapshotLine line, int indentSize, int tabSize)
+        public override int? GetDesiredIndentation(RazorSyntaxTree syntaxTree, int previousLineEndIndex, Func<int, string> getLineContent, int indentSize, int tabSize)
         {
             if (syntaxTree == null)
             {
                 throw new ArgumentNullException(nameof(syntaxTree));
             }
 
-            if (syntaxTreeSnapshot == null)
+            if (previousLineEndIndex < 0)
             {
-                throw new ArgumentNullException(nameof(syntaxTreeSnapshot));
+                throw new ArgumentOutOfRangeException(nameof(previousLineEndIndex));
             }
 
-            if (line == null)
+            if (getLineContent == null)
             {
-                throw new ArgumentNullException(nameof(line));
+                throw new ArgumentNullException(nameof(getLineContent));
             }
 
             if (indentSize < 0)
@@ -166,12 +162,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
                 throw new ArgumentOutOfRangeException(nameof(tabSize));
             }
 
-            // The tricky thing here is that line.Snapshot is very likely newer
-            var previousLine = line.Snapshot.GetLineFromLineNumber(line.LineNumber - 1);
-            var trackingPoint = line.Snapshot.CreateTrackingPoint(line.End, PointTrackingMode.Negative);
-            var previousLineEnd = trackingPoint.GetPosition(syntaxTreeSnapshot);
-
-            var simulatedChange = new SourceChange(previousLineEnd, 0, string.Empty);
+            var simulatedChange = new SourceChange(previousLineEndIndex, 0, string.Empty);
             var owningSpan = LocateOwner(syntaxTree.Root, simulatedChange);
 
             int? desiredIndentation = null;
@@ -191,8 +182,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
                             Span curSpan = curChild as Span;
                             if (curSpan.Kind == SpanKindInternal.MetaCode)
                             {
-                                // yay! We want to use the start of this span to determine the indent level.
-                                var startLine = line.Snapshot.GetLineFromLineNumber(curSpan.Start.LineIndex);
                                 var extraIndent = 0;
 
                                 // Dev11 337312: Only indent one level deeper if the item after the metacode is a markup block
@@ -205,7 +194,11 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
                                     }
                                 }
 
-                                desiredIndentation = GetIndentLevelOfLine(startLine, tabSize) + indentSize;
+                                // We can't rely on the syntax trees representation of the source document because partial parses may have mutated
+                                // the underlying SyntaxTree text buffer. Because of this, if we want to provide accurate indentations we need to
+                                // operate on the current line representation as indicated by the provider.
+                                var line = getLineContent(curSpan.Start.LineIndex);
+                                desiredIndentation = GetIndentLevelOfLine(line, tabSize) + indentSize;
                             }
                         }
 
@@ -323,11 +316,11 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
             return owner;
         }
 
-        private int GetIndentLevelOfLine(ITextSnapshotLine line, int tabSize)
+        private int GetIndentLevelOfLine(string line, int tabSize)
         {
             var indentLevel = 0;
-            
-            foreach (var c in line.GetText())
+
+            foreach (var c in line)
             {
                 if (!char.IsWhiteSpace(c))
                 {

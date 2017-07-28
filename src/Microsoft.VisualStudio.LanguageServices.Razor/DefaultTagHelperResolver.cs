@@ -17,8 +17,8 @@ using Newtonsoft.Json.Linq;
 
 namespace Microsoft.VisualStudio.LanguageServices.Razor
 {
-    [Export(typeof(ITagHelperResolver))]
-    internal class DefaultTagHelperResolver : ITagHelperResolver
+    [Export(typeof(TagHelperResolver))]
+    internal class DefaultTagHelperResolver : TagHelperResolver
     {
         [Import]
         public VisualStudioWorkspace Workspace { get; set; }
@@ -59,7 +59,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
 
                 // The OOP host is turned off, so let's do this in process.
                 var compilation = await project.GetCompilationAsync(CancellationToken.None).ConfigureAwait(false);
-                result = GetTagHelpers(compilation, designTime: true);
+                result = GetTagHelpers(compilation);
                 return result;
             }
             catch (Exception exception)
@@ -81,13 +81,13 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
             }
         }
 
-        private TagHelperResolutionResult GetTagHelpers(Compilation compilation, bool designTime)
+        public override TagHelperResolutionResult GetTagHelpers(Compilation compilation)
         {
             var descriptors = new List<TagHelperDescriptor>();
 
             var providers = new ITagHelperDescriptorProvider[]
             {
-                new DefaultTagHelperDescriptorProvider() { DesignTime = designTime, },
+                new DefaultTagHelperDescriptorProvider() { DesignTime = true, },
                 new ViewComponentTagHelperDescriptorProvider(),
             };
 

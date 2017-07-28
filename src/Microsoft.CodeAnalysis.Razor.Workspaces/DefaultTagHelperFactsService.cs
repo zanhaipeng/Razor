@@ -3,14 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.Language.Legacy;
 
-namespace Microsoft.VisualStudio.LanguageServices.Razor
+namespace Microsoft.CodeAnalysis.Razor
 {
-    [Export(typeof(TagHelperFactsService))]
     internal class DefaultTagHelperFactsService : TagHelperFactsService
     {
         public override TagHelperBinding GetTagHelperBinding(

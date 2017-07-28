@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language;
 
-namespace Microsoft.VisualStudio.LanguageServices.Razor
+namespace Microsoft.CodeAnalysis.Razor
 {
     public class AttributeCompletionContext
     {

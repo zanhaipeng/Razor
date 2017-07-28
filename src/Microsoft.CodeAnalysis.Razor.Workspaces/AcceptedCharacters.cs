@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.VisualStudio.LanguageServices.Razor
+namespace Microsoft.CodeAnalysis.Razor
 {
     [Flags]
     public enum AcceptedCharacters

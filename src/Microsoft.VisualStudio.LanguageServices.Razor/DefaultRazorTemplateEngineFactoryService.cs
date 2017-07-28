@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel.Composition;
 using Microsoft.AspNetCore.Mvc.Razor.Extensions;
 using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.CodeAnalysis.Razor;
 
 namespace Microsoft.VisualStudio.LanguageServices.Razor
 {

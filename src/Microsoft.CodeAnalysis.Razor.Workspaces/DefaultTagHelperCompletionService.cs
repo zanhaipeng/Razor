@@ -3,20 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 
-namespace Microsoft.VisualStudio.LanguageServices.Razor
+namespace Microsoft.CodeAnalysis.Razor
 {
-    [Export(typeof(TagHelperCompletionService))]
     internal class DefaultTagHelperCompletionService : TagHelperCompletionService
     {
         private readonly TagHelperFactsService _tagHelperFactsService;
         private static readonly HashSet<TagHelperDescriptor> _emptyHashSet = new HashSet<TagHelperDescriptor>();
 
-        [ImportingConstructor]
         public DefaultTagHelperCompletionService(TagHelperFactsService tagHelperFactsService)
         {
             _tagHelperFactsService = tagHelperFactsService;
