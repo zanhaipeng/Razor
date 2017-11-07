@@ -23,6 +23,7 @@
     <IsProductComponent>true</IsProductComponent>
     <ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>
     <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -39,7 +40,7 @@
     We exclude some facade-only assemblies (i.e. assemblies without any implementation) from the VSIX using the SuppressFromVsix ItemGroup listed in this file.
     The list is dependent on the framework being targeted. Changes to TargetFrameworkVersion would warrant rebuilding the SuppressFromVsix ItemGroup.
     -->
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
@@ -220,6 +221,15 @@
       <IncludeOutputGroupsInVSIXLocalOnly>
       </IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Microsoft.VisualStudio.ProjectSystem.Razor\Microsoft.VisualStudio.ProjectSystem.Razor.csproj">
+      <Project>{beaea65b-d9b4-428d-9bfd-9389423ee56c}</Project>
+      <Name>Microsoft.VisualStudio.ProjectSystem.Razor</Name>
+      <Private>False</Private>
+      <IncludeOutputGroupsInVSIX>
+      </IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>
+      </IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <!--
@@ -284,11 +294,12 @@
     <VSIXSourceItem Include="..\..\src\Microsoft.CodeAnalysis.Remote.Razor\bin\$(Configuration)\net46\Microsoft.CodeAnalysis.Remote.Razor.dll" />
     <VSIXSourceItem Include="..\..\src\Microsoft.AspNetCore.Mvc.Razor.Extensions\bin\$(Configuration)\net46\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" />
     <VSIXSourceItem Include="..\..\src\Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X\bin\$(Configuration)\net46\Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X.dll" />
-    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net46\Microsoft.AspNetCore.Razor.Language.dll" />
-    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net46\Microsoft.CodeAnalysis.Razor.dll" />
-    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net46\Microsoft.CodeAnalysis.Razor.Workspaces.dll" />
-    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net46\Microsoft.VisualStudio.Editor.Razor.dll" />
-    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net46\Microsoft.VisualStudio.LanguageServices.Razor.dll" />
+    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net461\Microsoft.AspNetCore.Razor.Language.dll" />
+    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net461\Microsoft.CodeAnalysis.Razor.dll" />
+    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net461\Microsoft.CodeAnalysis.Razor.Workspaces.dll" />
+    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net461\Microsoft.VisualStudio.Editor.Razor.dll" />
+    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\bin\$(Configuration)\net461\Microsoft.VisualStudio.LanguageServices.Razor.dll" />
+    <VSIXSourceItem Include="..\..\src\Microsoft.VisualStudio.ProjectSystem.Razor\bin\$(Configuration)\net461\Microsoft.VisualStudio.ProjectSystem.Razor.dll" />
     <Content Include="@(VSIXSourceItem)">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Composition;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor;
@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Text;
 
 namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
 {
-    [Shared]
+    [System.Composition.Shared]
     [Export(typeof(VisualStudioDocumentTrackerFactory))]
     internal class DefaultVisualStudioDocumentTrackerFactory : VisualStudioDocumentTrackerFactory
     {
@@ -28,7 +28,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
         public DefaultVisualStudioDocumentTrackerFactory(
             TextBufferProjectService projectService,
             ITextDocumentFactoryService textDocumentFactory,
-            Workspace workspace)
+            [Import(typeof(VisualStudioWorkspace))] Workspace workspace)
         {
             if (projectService == null)
             {

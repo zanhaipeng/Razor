@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Composition;
+using System.ComponentModel.Composition;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor;
@@ -21,7 +21,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
         private readonly Workspace _workspace;
 
         [ImportingConstructor]
-        public LegacyTemplateEngineFactoryService(Workspace workspace)
+        public LegacyTemplateEngineFactoryService([Import(typeof(VisualStudioWorkspace))] Workspace workspace)
         {
             if (workspace == null)
             {

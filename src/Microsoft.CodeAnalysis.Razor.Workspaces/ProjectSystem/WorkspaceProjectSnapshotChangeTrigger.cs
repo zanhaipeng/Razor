@@ -3,6 +3,7 @@
 
 using System.Composition;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Microsoft.CodeAnalysis.Razor.ProjectSystem
 {
@@ -78,6 +79,23 @@ namespace Microsoft.CodeAnalysis.Razor.ProjectSystem
                 case WorkspaceChangeKind.SolutionRemoved:
                     InitializeSolution(e.NewSolution);
                     break;
+            }
+
+            CheckItOut(e.NewSolution);
+        }
+
+        private async void CheckItOut(Solution solution)
+        {
+            foreach (var project in solution.Projects)
+            {
+                if (project.Documents.Any(d => d.Name == "Index.cs") && project.MetadataReferences.Count >= 329)
+                {
+                    var projectReference = project.MetadataReferences.Where(p => p.Display.Contains("RazorProjectSample")).ToArray();
+
+                    var compilation = await project.GetCompilationAsync();
+                    var diagnostics = compilation.GetDiagnostics();
+                }
+
             }
         }
     }
