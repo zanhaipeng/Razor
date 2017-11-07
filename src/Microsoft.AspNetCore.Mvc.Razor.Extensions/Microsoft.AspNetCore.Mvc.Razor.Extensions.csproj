@@ -21,4 +21,11 @@
     <ProjectReference Include="../Microsoft.CodeAnalysis.Razor/Microsoft.CodeAnalysis.Razor.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp)" />
+    <PackageReference Include="System.Composition" Version="$(SystemCompositionPackageVersion)" />
+    <PackageReference Include="System.ValueTuple" Version="$(SystemValueTuplePackageVersion)" />
+  </ItemGroup>
+
 </Project>

@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
+using System.Composition;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor;
@@ -26,7 +26,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
         [ImportingConstructor]
         public RazorTextViewConnectionListener(
             RazorEditorFactoryService editorFactoryService,
-            [Import(typeof(VisualStudioWorkspace))] Workspace workspace)
+            VisualStudioWorkspace workspace)
         {
             if (editorFactoryService == null)
             {
@@ -48,7 +48,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
         internal RazorTextViewConnectionListener(
             ForegroundDispatcher foregroundDispatcher,
             RazorEditorFactoryService editorFactoryService,
-            [Import(typeof(VisualStudioWorkspace))] Workspace workspace)
+            Workspace workspace)
         {
             if (foregroundDispatcher == null)
             {

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System.ComponentModel.Composition;
+using System.Composition;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor;
 
@@ -15,8 +15,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor
     internal class LegacyTagHelperResolver : DefaultTagHelperResolver, ITagHelperResolver
     {
         [ImportingConstructor]
-        public LegacyTagHelperResolver(
-            [Import(typeof(VisualStudioWorkspace))] Workspace workspace)
+        public LegacyTagHelperResolver(VisualStudioWorkspace workspace)
             : base(workspace.Services.GetRequiredService<ErrorReporter>(), workspace)
         {
         }

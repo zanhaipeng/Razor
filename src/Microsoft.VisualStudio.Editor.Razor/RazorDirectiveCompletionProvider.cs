@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel.Composition;
+using System.Composition;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -20,7 +20,7 @@ using Microsoft.VisualStudio.Text.Projection;
 
 namespace Microsoft.VisualStudio.Editor.Razor
 {
-    [System.Composition.Shared]
+    [Shared]
     [Export(typeof(CompletionProvider))]
     [ExportMetadata("Language", LanguageNames.CSharp)]
     internal class RazorDirectiveCompletionProvider : CompletionProvider
@@ -37,7 +37,7 @@ namespace Microsoft.VisualStudio.Editor.Razor
         private readonly Lazy<RazorCodeDocumentProvider> _codeDocumentProvider;
 
         [ImportingConstructor]
-        public RazorDirectiveCompletionProvider([Import(typeof(RazorCodeDocumentProvider))] Lazy<RazorCodeDocumentProvider> codeDocumentProvider)
+        public RazorDirectiveCompletionProvider([Import]Lazy<RazorCodeDocumentProvider> codeDocumentProvider)
         {
             if (codeDocumentProvider == null)
             {

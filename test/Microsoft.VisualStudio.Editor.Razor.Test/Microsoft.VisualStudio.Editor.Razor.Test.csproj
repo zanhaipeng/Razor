@@ -13,11 +13,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(VSIX_MicrosoftCodeAnalysisCommonPackageVersion)" />
     <PackageReference Include="Moq" Version="$(MoqPackageVersion)" />
     <PackageReference Include="xunit.analyzers" Version="$(XunitAnalyzersPackageVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioPackageVersion)" />
     <PackageReference Include="xunit" Version="$(XunitPackageVersion)" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_Features)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp_Features)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_Workspaces)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_EditorFeatures_Text)" />
+  </ItemGroup>
 </Project>

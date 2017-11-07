@@ -45,6 +45,25 @@
     <XunitAnalyzersPackageVersion>0.7.0</XunitAnalyzersPackageVersion>
     <XunitPackageVersion>2.3.0</XunitPackageVersion>
     <XunitRunnerVisualStudioPackageVersion>2.3.0</XunitRunnerVisualStudioPackageVersion>
+    <SystemCompositionPackageVersion>1.0.31</SystemCompositionPackageVersion>
+    <SystemCollectionsImmutablePackageVersion>1.3.0</SystemCollectionsImmutablePackageVersion>
+    <SystemValueTuplePackageVersion>4.3.0</SystemValueTuplePackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RoslynBinaries>$(MSBuildThisFileDirectory)..\..\..\Binaries\Debug\</RoslynBinaries>
+    <RoslynBinary_Microsoft_CodeAnalysis>$(RoslynBinaries)Dlls\CodeAnalysis\Microsoft.CodeAnalysis.dll</RoslynBinary_Microsoft_CodeAnalysis>
+    <RoslynBinary_Microsoft_CodeAnalysis_Features>$(RoslynBinaries)Dlls\Features\Microsoft.CodeAnalysis.Features.dll</RoslynBinary_Microsoft_CodeAnalysis_Features>
+    <RoslynBinary_Microsoft_CodeAnalysis_CSharp>$(RoslynBinaries)Dlls\CSharpCodeAnalysis\Microsoft.CodeAnalysis.CSharp.dll</RoslynBinary_Microsoft_CodeAnalysis_CSharp>
+    <RoslynBinary_Microsoft_CodeAnalysis_CSharp_Features>$(RoslynBinaries)Dlls\CSharpFeatures\Microsoft.CodeAnalysis.CSharp.Features.dll</RoslynBinary_Microsoft_CodeAnalysis_CSharp_Features>
+    <RoslynBinary_Microsoft_CodeAnalysis_Workspaces>$(RoslynBinaries)Dlls\Workspaces\Microsoft.CodeAnalysis.Workspaces.dll</RoslynBinary_Microsoft_CodeAnalysis_Workspaces>    
+    <RoslynBinary_Microsoft_CodeAnalysis_CSharp_Workspaces>$(RoslynBinaries)Dlls\CSharpWorkspace</RoslynBinary_Microsoft_CodeAnalysis_CSharp_Workspaces>
+    <RoslynBinary_Microsoft_CodeAnalysis_Remote_Razor_ServiceHub>$(RoslynBinaries)Dlls\RazorServiceHub\Microsoft.CodeAnalysis.Remote.Razor.ServiceHub.dll</RoslynBinary_Microsoft_CodeAnalysis_Remote_Razor_ServiceHub>
+    <RoslynBinary_Microsoft_CodeAnalysis_EditorFeatures_Text>$(RoslynBinaries)Dlls\TextEditorFeatures\Microsoft.CodeAnalysis.EditorFeatures.Text.dll</RoslynBinary_Microsoft_CodeAnalysis_EditorFeatures_Text>
+    <RoslynBinary_VisualStudio_LanguageServices>$(RoslynBinaries)Dlls\ServicesVisualStudio\Microsoft.VisualStudio.LanguageServices.dll</RoslynBinary_VisualStudio_LanguageServices>
+    <RoslynBinary_VisualStudio_LanguageServices_Razor_RemoteClient>$(RoslynBinaries)Dlls\RazorVisualStudio\Microsoft.VisualStudio.LanguageServices.Razor.RemoteClient.dll</RoslynBinary_VisualStudio_LanguageServices_Razor_RemoteClient>
+    <RoslynBinary_Microsoft_CodeAnalysisxx>$(RoslynBinaries)</RoslynBinary_Microsoft_CodeAnalysisxx>
+    <RoslynBinary_Microsoft_CodeAnalysisxx>$(RoslynBinaries)</RoslynBinary_Microsoft_CodeAnalysisxx>
+    <RoslynBinary_Microsoft_CodeAnalysisxx>$(RoslynBinaries)</RoslynBinary_Microsoft_CodeAnalysisxx>
   </PropertyGroup>
   <Import Project="$(DotNetPackageVersionPropsPath)" Condition=" '$(DotNetPackageVersionPropsPath)' != '' " />
 </Project>

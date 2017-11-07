@@ -3,13 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using System.Composition;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.VisualStudio.Editor.Razor
 {
-    [System.Composition.Shared]
+    [Shared]
     [Export(typeof(RazorCodeDocumentProvider))]
     internal class DefaultCodeDocumentProvider : RazorCodeDocumentProvider
     {

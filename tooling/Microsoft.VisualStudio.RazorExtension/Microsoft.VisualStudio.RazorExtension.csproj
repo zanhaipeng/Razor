@@ -230,6 +230,12 @@
     <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="15.0.26606" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="..\..\..\..\Binaries\Debug\Dlls\CodeAnalysis\Microsoft.CodeAnalysis.dll" />
+    <Reference Include="..\..\..\..\Binaries\Debug\Dlls\Workspaces\Microsoft.CodeAnalysis.Workspaces.dll" />
+    <Reference Include="..\..\..\..\Binaries\Debug\Dlls\ServicesVisualStudio\Microsoft.VisualStudio.LanguageServices.dll" />
+    <PackageReference Include="System.Composition" Version="$(SystemCompositionPackageVersion)" />
+  </ItemGroup>
   <ItemDefinitionGroup>
     <SuppressFromVsix>
       <Visible>false</Visible>

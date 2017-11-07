@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.ComponentModel.Composition;
+using System.Composition;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -21,9 +21,28 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
 
         [ImportingConstructor]
         public DefaultTextBufferProjectService(
-            [Import(typeof(SVsServiceProvider))] IServiceProvider services,
+            SVsServiceProvider services,
             ITextDocumentFactoryService documentFactory,
-            [Import(typeof(VisualStudioWorkspace))] Workspace workspace)
+            VisualStudioWorkspace workspace)
+        {
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (documentFactory == null)
+            {
+                throw new ArgumentNullException(nameof(documentFactory));
+            }
+
+            _documentFactory = documentFactory;
+            _documentTable = new RunningDocumentTable(services);
+        }
+
+        internal DefaultTextBufferProjectService(
+            IServiceProvider services,
+            ITextDocumentFactoryService documentFactory,
+            Workspace workspace)
         {
             if (services == null)
             {

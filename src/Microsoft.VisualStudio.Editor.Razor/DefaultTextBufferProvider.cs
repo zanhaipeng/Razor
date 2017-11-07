@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.ComponentModel.Composition;
+using System.Composition;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Text.Projection;
 
 namespace Microsoft.VisualStudio.Editor.Razor
 {
-    [System.Composition.Shared]
+    [Shared]
     [Export(typeof(RazorTextBufferProvider))]
     internal class DefaultTextBufferProvider : RazorTextBufferProvider
     {

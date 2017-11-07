@@ -18,13 +18,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="$(VSIX_MicrosoftCodeAnalysisWorkspacesCommonPackageVersion)" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(VSIX_MicrosoftCodeAnalysisCSharpWorkspacesPackageVersion)" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelPackageVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkPackageVersion)" />
     <PackageReference Include="Moq" Version="$(MoqPackageVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioPackageVersion)" />
     <PackageReference Include="xunit" Version="$(XunitPackageVersion)" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp_Features)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_Workspaces)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_Workspaces_CSharp)" />
+  </ItemGroup>
 </Project>

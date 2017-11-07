@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.ComponentModel.Composition;
+using System.Composition;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor;
 using Microsoft.VisualStudio.Editor.Razor;
@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Text.Operations;
 
 namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
 {
-    [System.Composition.Shared]
+    [Shared]
     [Export(typeof(BraceSmartIndenterFactory))]
     internal class DefaultBraceSmartIndenterFactory : BraceSmartIndenterFactory
     {
@@ -20,7 +20,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
         [ImportingConstructor]
         public DefaultBraceSmartIndenterFactory(
             IEditorOperationsFactoryService editorOperationsFactory,
-            [Import(typeof(VisualStudioWorkspace))] Workspace workspace)
+            [Import("Microsoft.VisualStudio.LanguageServices.VisualStudioWorkspace")] Workspace workspace)
         {
             if (editorOperationsFactory == null)
             {

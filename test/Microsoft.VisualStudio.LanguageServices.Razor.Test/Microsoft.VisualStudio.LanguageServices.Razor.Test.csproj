@@ -25,15 +25,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(VSIX_MicrosoftCodeAnalysisCommonPackageVersion)" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(VSIX_MicrosoftCodeAnalysisCSharpPackageVersion)" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(VSIX_MicrosoftCodeAnalysisCSharpWorkspacesPackageVersion)" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="$(VSIX_MicrosoftCodeAnalysisWorkspacesCommonPackageVersion)" />
-    <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="$(VSIX_MicrosoftCodeAnalysisEditorFeaturesTextPackageVersion)" />
     <PackageReference Include="Moq" Version="$(MoqPackageVersion)" />
     <PackageReference Include="xunit.analyzers" Version="$(XunitAnalyzersPackageVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioPackageVersion)" />
     <PackageReference Include="xunit" Version="$(XunitPackageVersion)" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp_Features)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_Workspaces)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_Workspaces_CSharp)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_EditorFeatures_Text)" />
+    <Reference Include="$(RoslynBinary_VisualStudio_LanguageServices)" />
+  </ItemGroup>
 </Project>

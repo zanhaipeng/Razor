@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="$(VSIX_MicrosoftCodeAnalysisCSharpFeaturesPackageVersion)" />
-    <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="$(VSIX_MicrosoftCodeAnalysisEditorFeaturesTextPackageVersion)" />
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="$(MicrosoftVisualStudioLanguageIntellisensePackageVersion)" />
   </ItemGroup>
 
@@ -17,5 +15,16 @@
     <ProjectReference Include="..\Microsoft.AspNetCore.Mvc.Razor.Extensions\Microsoft.AspNetCore.Mvc.Razor.Extensions.csproj" />
     <ProjectReference Include="..\Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X\Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_Features)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_CSharp_Features)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_Workspaces)" />
+    <Reference Include="$(RoslynBinary_Microsoft_CodeAnalysis_EditorFeatures_Text)" />
+    <PackageReference Include="System.Composition" Version="$(SystemCompositionPackageVersion)" />
+  </ItemGroup>
+
 
 </Project>

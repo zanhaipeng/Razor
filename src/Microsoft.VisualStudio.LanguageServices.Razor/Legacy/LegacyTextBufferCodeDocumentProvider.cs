@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.ComponentModel.Composition;
+using System.Composition;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.VisualStudio.Editor.Razor;
 using Microsoft.VisualStudio.Text;
 
 namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
 {
-    [System.Composition.Shared]
+    [Shared]
     [Export(typeof(TextBufferCodeDocumentProvider))]
     internal class LegacyTextBufferCodeDocumentProvider : TextBufferCodeDocumentProvider
     {

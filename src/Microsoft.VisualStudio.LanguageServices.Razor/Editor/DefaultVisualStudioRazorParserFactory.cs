@@ -2,8 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using System.Composition;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor;
 using Microsoft.VisualStudio.Editor.Razor;
@@ -12,7 +11,7 @@ using TemplateEngineFactoryService = Microsoft.CodeAnalysis.Razor.RazorTemplateE
 
 namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
 {
-    [System.Composition.Shared]
+    [Shared]
     [Export(typeof(VisualStudioRazorParserFactory))]
     internal class DefaultVisualStudioRazorParserFactory : VisualStudioRazorParserFactory
     {
@@ -24,7 +23,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Razor.Editor
         [ImportingConstructor]
         public DefaultVisualStudioRazorParserFactory(
             ICompletionBroker completionBroker,
-            [Import(typeof(VisualStudioWorkspace))] Workspace workspace)
+            Workspace workspace)
         {
             if (completionBroker == null)
             {
