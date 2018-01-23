@@ -9,7 +9,6 @@ using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CommandLine;
-using Microsoft.CodeAnalysis.CompilerServer;
 
 namespace Microsoft.AspNetCore.Razor.Tools
 {
