@@ -27,15 +27,5 @@ namespace Microsoft.AspNetCore.Razor.Language
             // Assert
             Assert.False(context.AllowMinimizedBooleanTagHelperAttributes);
         }
-
-        [Fact]
-        public void Create_UnknownVersion_Throws()
-        {
-            // Arrange, Act & Assert
-            var exception = Assert.Throws<ArgumentException>(
-                () => RazorParserFeatureFlags.Create(0));
-
-            Assert.Equal("Provided value for razor language version is unsupported or invalid: '0'.", exception.Message);
-        }
     }
 }

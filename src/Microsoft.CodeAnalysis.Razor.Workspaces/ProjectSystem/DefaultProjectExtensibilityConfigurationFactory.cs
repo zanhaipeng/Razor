@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor.Language;
 
 namespace Microsoft.CodeAnalysis.Razor.ProjectSystem
 {
@@ -72,10 +73,14 @@ namespace Microsoft.CodeAnalysis.Razor.ProjectSystem
                 }
             }
 
+            RazorLanguageVersion razorLanguageVersion = null;
             if (razorAssembly != null && mvcAssembly != null)
             {
+                razorLanguageVersion = GetLanguageVersion(razorAssembly);
+
                 // This means we've definitely found a supported Razor version and an MVC version.
                 return new MvcExtensibilityConfiguration(
+                    razorLanguageVersion,
                     ProjectExtensibilityConfigurationKind.ApproximateMatch,
                     new ProjectExtensibilityAssembly(razorAssembly),
                     new ProjectExtensibilityAssembly(mvcAssembly));
@@ -92,10 +97,46 @@ namespace Microsoft.CodeAnalysis.Razor.ProjectSystem
                 mvcAssembly = new AssemblyIdentity(MvcAssemblyName, DefaultMvcVersion);
             }
 
+            if (razorLanguageVersion == null)
+            {
+                razorLanguageVersion = GetLanguageVersion(razorAssembly);
+            }
+
             return new MvcExtensibilityConfiguration(
+                razorLanguageVersion,
                 ProjectExtensibilityConfigurationKind.Fallback,
                 new ProjectExtensibilityAssembly(razorAssembly),
                 new ProjectExtensibilityAssembly(mvcAssembly));
+        }
+
+        // Internal for testing
+        internal static RazorLanguageVersion GetLanguageVersion(AssemblyIdentity razorAssembly)
+        {
+            // This is inferred from the assembly for now, the Razor language version will eventually flow from MSbuild.
+
+            var razorAssemblyVersion = razorAssembly.Version;
+            if (razorAssemblyVersion.Major == 1)
+            {
+                if (razorAssemblyVersion.Minor >= 1)
+                {
+                    return RazorLanguageVersion.Version1_1;
+                }
+
+                return RazorLanguageVersion.Version1_0;
+            }
+
+            if (razorAssemblyVersion.Major == 2)
+            {
+                if (razorAssemblyVersion.Minor >= 1)
+                {
+                    return RazorLanguageVersion.Version2_1;
+                }
+
+                return RazorLanguageVersion.Version2_0;
+            }
+
+            // Couldn't determine version based off of configuration, fallback to latest.
+            return RazorLanguageVersion.Latest;
         }
     }
 }
